@@ -3,7 +3,7 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
-import PopupImage from './PopupImage';
+import ImagePopup from './ImagePopup';
 
 
 function App() {
@@ -128,7 +128,7 @@ function App() {
       isOpen={isConfirmPopupOpen}
       onClose={closeAllPopups}>
       </PopupWithForm>        
-      <PopupImage 
+      <ImagePopup 
       card={isLookingCard}
       onClose={closeAllPopups}/>         
     </div>

@@ -18,15 +18,15 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);  
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);  
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true); 
   }
 
-  const [isLookingCard, setIsLookingCard] = React.useState(null);
+  const [LookingCard, setLookingCard] = React.useState(null);
   const handleCardClick = (card) => {
     console.log(card);
-    setIsLookingCard(card);
+    setLookingCard(card);
   }
 
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
@@ -37,7 +37,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setIsLookingCard(null);
+    setLookingCard(null);
     setIsConfirmPopupOpen(false);   
   }
   return (  
@@ -129,7 +129,7 @@ function App() {
       onClose={closeAllPopups}>
       </PopupWithForm>        
       <ImagePopup 
-      card={isLookingCard}
+      card={LookingCard}
       onClose={closeAllPopups}/>         
     </div>
   );

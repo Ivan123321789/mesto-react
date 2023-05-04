@@ -7,7 +7,7 @@ import Card from './Card';
 function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick, onTrashClick}) {
   const [userName, setUserName] = useState("Юрий Гагарин");
   const [userAbout, setUserAbout] = useState("Первый человек в космосе");
-  const [userAvatar, setUserAvatar] = useState({avatar});
+  const [userAvatar, setUserAvatar] = useState(avatar);
   const [cards, setCards] = useState([]);
 
   useEffect(() => {

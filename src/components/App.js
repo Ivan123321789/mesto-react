@@ -18,12 +18,12 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);  
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);  
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true); 
   }
 
-  const [LookingCard, setLookingCard] = React.useState(null);
+  const [lookingCard, setLookingCard] = React.useState(null);
   const handleCardClick = (card) => {
     console.log(card);
     setLookingCard(card);
@@ -129,7 +129,7 @@ function App() {
       onClose={closeAllPopups}>
       </PopupWithForm>        
       <ImagePopup 
-      card={LookingCard}
+      card={lookingCard}
       onClose={closeAllPopups}/>         
     </div>
   );

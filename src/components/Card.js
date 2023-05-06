@@ -1,30 +1,55 @@
 import React from 'react';
+import {useContext} from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Card(props) {
+function Card({card, onCardClick, onLikeClick, onTrashClick}) {
+  const currentUser = useContext(CurrentUserContext);
+  const isOwn = card.owner._id === currentUser._id;
+  const isLiked = card.likes.some(i => i._id === currentUser._id);
+  const cardDeleteButtonClassName = (
+    `elements__delete ${!isOwn && 'elements__delete_hidden'}`
+  ); 
 
-  function handleClick() {
-     props.onCardClick(props.card);    
+  const LikesButtonClassName = (
+    `elements__like ${isLiked && 'elements__like_active'}`
+  );
+
+  function handleClickCard() {
+    onCardClick(card);    
   }
+
+  function handleClickTrach() {
+    onTrashClick(card)
+  }
+
+  function handleClickLike() {
+    onLikeClick(card)
+  }
+
   return (
-    <div className="elements__element" key={props.card._id}>
-      <img className="elements__image" onClick={handleClick}
-      src={props.card.link} alt={props.card.name} />
+    <div className="elements__element" key={card._id}>
+      <img 
+        className="elements__image" 
+        onClick={handleClickCard}
+        src={card.link} 
+        alt={card.name} />
       <div className="elements__element-title">
-        <h2 className="elements__text">{props.card.name}</h2>
+        <h2 className="elements__text">{card.name}</h2>
         <div className="elements__like-container">
           <button
-            className="elements__like"
+            className={LikesButtonClassName}
             type="button"
             aria-label="Кнопка like"
+            onClick={handleClickLike}
           ></button>
-          <span className="elements__like-counter">{props.card.likes.length}</span>
+          <span className="elements__like-counter">{card.likes.length}</span>
         </div>
       </div>
       <button
-        className="elements__delete"
+        className={cardDeleteButtonClassName}
         type="button"
         aria-label="Кнока Delete"
-        onClick={props.onTrashClick}
+        onClick={handleClickTrach}
       ></button>
     </div>
   )

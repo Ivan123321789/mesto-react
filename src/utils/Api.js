@@ -95,6 +95,15 @@ class Api {
     .then(this._checkServerResponse)
   }
 
+  // Смена активности лайка
+  changeLikeCardStatus(_id, isLiked) {
+    if (isLiked) {
+      return this.addLike(_id);
+    } else {
+      return this.deleteLike(_id);
+    }
+  }
+
   // Общий промис для отрисовки страницы
   getPromiseAll() {
     return Promise.all([

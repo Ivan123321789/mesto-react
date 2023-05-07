@@ -1,36 +1,29 @@
 import {useState, useEffect} from 'react';
 import PopupWithForm from './PopupWithForm';
+import useValidation from '../hooks/useValidation';
 
-function PopupAddPlace({isOpen, onClose, onAddPlace}) {
-  const [name, setPlaceName] = useState('');
-  const [link, setLink] = useState('');
-
-  function handleChangePlaceName(evt) {
-    setPlaceName(evt.target.value)
-  };
-
-  function handleChangePlaceLink(evt) {
-    setLink(evt.target.value)
-  };
+function PopupAddPlace({isLoading, isOpen, onClose, onAddPlace}) {
+  const {values, handleChange, resetForm, errors, isValid} = useValidation();
 
   function handleSubmit(evt) {
     evt.preventDefault();
-
-    onAddPlace({name, link});
+    onAddPlace(values);
   };
 
   useEffect(() => {
-    setPlaceName('');
-    setLink('');
-  }, [isOpen]);
+    resetForm('', {}, true)
+  }, [resetForm, isOpen]);
   
   return (
     <PopupWithForm
     name='place'
     title='Новое место'
     buttonText='Создать'
+    buttonTextLoading='Сохранение...'
     isOpen={isOpen}
     onClose={onClose}
+    isLoading={isLoading}
+    isDisabled={!isValid || isLoading}
     onSubmit={handleSubmit}>
       <input
         required
@@ -41,10 +34,10 @@ function PopupAddPlace({isOpen, onClose, onAddPlace}) {
         placeholder="Название"
         minLength="2"
         maxLength="30"
-        value={name || ''} 
-        onChange={handleChangePlaceName}
+        value={values.name || ''} 
+        onChange={handleChange}
       />
-      <span id="placeName-error" className="error"></span>
+      <span id="placeName-error" className="error">{errors.name || ''}</span>
       <input
         required
         type="url"
@@ -52,10 +45,10 @@ function PopupAddPlace({isOpen, onClose, onAddPlace}) {
         name="link"
         className="popup__input"
         placeholder="Ссылка на изображение"
-        value={link || ''} 
-        onChange={handleChangePlaceLink}
+        value={values.link || ''} 
+        onChange={handleChange}
       />
-      <span id="imageLink-error" className="error"></span>
+      <span id="imageLink-error" className="error">{errors.link || ''}</span>
     </PopupWithForm>
   )
 }

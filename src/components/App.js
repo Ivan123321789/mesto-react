@@ -33,10 +33,28 @@ function App() {
     setIsPopupEditAvatarOpen(true); 
   }
 
-  const [lookingCard, setLookingCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState(null);
   const handleCardClick = (card) => {
-    setLookingCard(card);
+    setSelectedCard(card);
   }
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isOpen = isPopupEditAvatarOpen || isPopupEditProfileOpen || isPopupAddPlaceOpen || selectedCard
+
+  useEffect(() => {
+    function closeByEscape(evt) {
+      if(evt.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+    if(isOpen) { // навешиваем только при открытии
+      document.addEventListener('keydown', closeByEscape);
+      return () => {
+        document.removeEventListener('keydown', closeByEscape);
+      }
+    }
+  }, [isOpen]) 
 
   function handleLikeClick(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -44,26 +62,32 @@ function App() {
     .then((newCard) => {
       setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   function handleCardDelete(card) {
+    setIsLoading(true);
     api.deleteCardApi(card._id)
     .then((res) => {
       setCards((state) => state.filter((c) => c._id !== card._id))
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally (() => setIsLoading(false));
   }
 
   function closeAllPopups() {
     setIsPopupEditAvatarOpen(false);
     setIsPopupEditProfileOpen(false);
     setIsPopupAddPlaceOpen(false);
-    setLookingCard(null); 
+    setSelectedCard(null); 
   }
 
   function handleEditProfile(data) {
+    setIsLoading(true);
     api.changeProfile(data)
     .then ((newUserInfo) => {
       console.log(newUserInfo);
@@ -73,9 +97,11 @@ function App() {
     .catch((err) => {
       console.log(err);
     })
+    .finally (() => setIsLoading(false));
   }
 
   function handleEditAvatar(data) {
+    setIsLoading(true);
     api.changeAvatar(data)
     .then ((newUserInfo) => {
       setCurrentUser(newUserInfo);
@@ -84,9 +110,11 @@ function App() {
     .catch((err) => {
       console.log(err);
     })
+    .finally (() => setIsLoading(false));
   }
 
   function handleAddPlace(data) {
+    setIsLoading(true);
     api.postCard(data)
     .then((newCard) => {
       setCards([newCard, ...cards]);
@@ -95,6 +123,7 @@ function App() {
     .catch((err) => {
       console.log(err);
     })
+    .finally (() => setIsLoading(false));
   }
   
   useEffect(() => {
@@ -123,22 +152,25 @@ function App() {
         />
         <Footer />
         <PopupEditProfile
+          isLoading={isLoading}
           isOpen={isPopupEditProfileOpen}
           onClose={closeAllPopups}
           onEditProfile={handleEditProfile}
         />
-        <PopupAddPlace 
+        <PopupAddPlace
+          isLoading={isLoading} 
           isOpen={isPopupAddPlaceOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlace}
         />
         <PopupEditAvatar 
+          isLoading={isLoading}
           isOpen={isPopupEditAvatarOpen}
           onClose={closeAllPopups}
           onEditAvatar={handleEditAvatar}
         />                    
         <ImagePopup 
-          card={lookingCard}
+          card={selectedCard}
           onClose={closeAllPopups}
         />
             

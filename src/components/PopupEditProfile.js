@@ -1,33 +1,22 @@
-import {useContext, useState, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {CurrentUserContext} from '../contexts/CurrentUserContext.js';
 import PopupWithForm from './PopupWithForm';
+import useValidation from '../hooks/useValidation.js';
 
-function PopupEditProfile({isOpen, onClose, onEditProfile}) {
+function PopupEditProfile({isLoading, isOpen, onClose, onEditProfile}) {
+  const {values, handleChange, resetForm, errors, isValid} = useValidation();
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState('Юрий Гагарин');
-  const [about, setAbout] = useState('Первый человек в космосе');
-
+  
   useEffect(() => {
-    setName(currentUser.name);
-    setAbout(currentUser.about);
-    },[currentUser, isOpen]
+    if (currentUser) {
+      resetForm(currentUser, {}, true)
+    }
+    },[currentUser, resetForm, isOpen]
   );
-
-  function handleChangeName(evt) {
-    setName(evt.target.value)
-  };
-
-  function handleChangeAbout(evt) {
-    setAbout(evt.target.value)
-  };
-
+  
   function handleSubmit(evt) {
     evt.preventDefault();
-    onEditProfile({
-        name: name,
-        about: about
-    });
-    console.log(name, about);
+    onEditProfile(values);
   };
 
   return (
@@ -35,8 +24,11 @@ function PopupEditProfile({isOpen, onClose, onEditProfile}) {
             name='profile'
             title='Редактировать профиль'
             buttonText='Сохранить'
+            buttonTextLoading='Сохранение...'
+            isLoading={isLoading}
             isOpen={isOpen}
             onClose={onClose}
+            isDisabled={!isValid || isLoading}
             onSubmit={handleSubmit}>
             <input
               required
@@ -46,11 +38,11 @@ function PopupEditProfile({isOpen, onClose, onEditProfile}) {
               className="popup__input"
               minLength="2"
               maxLength="40"
-              value={name || ''}
+              value={values.name || ''}
               placeholder="Имя"
-              onChange={handleChangeName}
+              onChange={handleChange}
             />
-            <span id="name-error" className="error"></span>
+            <span id="name-error" className="error">{errors.name || ''}</span>
             <input
               required
               type="text"
@@ -59,11 +51,11 @@ function PopupEditProfile({isOpen, onClose, onEditProfile}) {
               className="popup__input"
               minLength="2"
               maxLength="200"
-              value={about || ''}
+              value={values.about || ''}
               placeholder="О себе"
-              onChange={handleChangeAbout}
+              onChange={handleChange}
             />
-            <span id="about-error" className="error"></span>
+            <span id="about-error" className="error">{errors.about || ''}</span>
           </PopupWithForm>
   );
 }

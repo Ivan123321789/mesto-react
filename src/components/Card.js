@@ -27,7 +27,7 @@ function Card({card, onCardClick, onLikeClick, onTrashClick}) {
   }
 
   return (
-    <div className="elements__element" key={card._id}>
+    <div className="elements__element">
       <img 
         className="elements__image" 
         onClick={handleClickCard}

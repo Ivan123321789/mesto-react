@@ -11,7 +11,7 @@ function PopupAddPlace({isLoading, isOpen, onClose, onAddPlace}) {
   };
 
   useEffect(() => {
-    resetForm('', {}, true)
+    resetForm({}, {}, true)
   }, [resetForm, isOpen]);
   
   return (

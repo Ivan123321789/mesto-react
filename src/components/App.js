@@ -41,21 +41,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const isOpen = isPopupEditAvatarOpen || isPopupEditProfileOpen || isPopupAddPlaceOpen || selectedCard
-
-  useEffect(() => {
-    function closeByEscape(evt) {
-      if(evt.key === 'Escape') {
-        closeAllPopups();
-      }
-    }
-    if(isOpen) { // навешиваем только при открытии
-      document.addEventListener('keydown', closeByEscape);
-      return () => {
-        document.removeEventListener('keydown', closeByEscape);
-      }
-    }
-  }, [isOpen]) 
-
+  
   function handleLikeClick(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
